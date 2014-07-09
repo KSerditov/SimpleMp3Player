@@ -19,7 +19,8 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="64dp"
             android:layout_marginTop="128dp"
-            android:background="@drawable/play_black" />
+            android:background="@drawable/play_black"
+            android:onClick="playNext" />
 
         <Button
             android:id="@+id/btnStop"
@@ -30,7 +31,8 @@
             android:layout_marginLeft="128dp"
             android:layout_marginTop="128dp"
             android:background="@drawable/stop_disabled"
-            android:enabled="false" />
+            android:enabled="false"
+            android:onClick="stopCurrent" />
 
     </RelativeLayout>
 

@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.Random;
 
 import android.support.v7.app.ActionBarActivity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +19,10 @@ public class MainActivity extends ActionBarActivity {
 	final File path = new File("/storage/extSdCard/Music");
 	final Random r = new Random();
 	final MediaPlayer mediaPlayer = new MediaPlayer();
+	private Button btnPlay = null;
+	private Button btnStop = null;
+	private Intent intent = null;
+	public static final String ACTION = "ru.kserditov.simplemp3player.ACTION";
 	private boolean isPlaying = false;
 
 	@Override
@@ -24,38 +30,48 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		final Button btnPlay = (Button) findViewById(R.id.btnPlay);
-		final Button btnStop = (Button) findViewById(R.id.btnStop);
+		btnPlay = (Button) findViewById(R.id.btnPlay);
+		btnStop = (Button) findViewById(R.id.btnStop);
 
-		btnPlay.setOnClickListener(new View.OnClickListener() {
+	}
 
-			@Override
-			public void onClick(View v) {
+	public void playNext(View view) {
+		
+		Log.d("playnext","isPlaying = " + String.valueOf(isPlaying));
+		
+		if (!isPlaying) {
+			Log.d("playnext","calling intent start");
+			intent = new Intent(MainActivity.this, MediaPlayerService.class);
+			intent.putExtra(ACTION, 1);
+			startService(intent);
 
-				if (!isPlaying) {
-					playNext(btnPlay, btnStop);
-				} else {
-					stopCurrent(btnPlay, btnStop);
-					playNext(btnPlay, btnStop);
-				}
+		} else {
+			stopService(intent);
+			startService(intent);
+		}
 
-			}
-		});
+		isPlaying = true;
 
-		btnStop.setOnClickListener(new View.OnClickListener() {
+		btnPlay.setBackgroundResource(R.drawable.forward_black);
 
-			@Override
-			public void onClick(View v) {
-				stopCurrent(btnPlay, btnStop);
-			}
+		btnStop.setEnabled(true);
+		btnStop.setBackgroundResource(R.drawable.stop_black);
+	}
 
-		});
+	public void stopCurrent(View view) {
 
+		stopService(intent);
+		
+		isPlaying = false;
+
+		btnPlay.setBackgroundResource(R.drawable.play_black);
+
+		btnStop.setEnabled(false);
+		btnStop.setBackgroundResource(R.drawable.stop_disabled);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
@@ -71,56 +87,6 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	public File chooseSong(Random r, File path) {
-		File[] songsList = path.listFiles();
-		int index = (r.nextInt(songsList.length));
-		return songsList[index];
-	}
-
-	public void playNext(Button btnPlay, Button btnStop) {
-
-		final Button btnPlayRef = btnPlay;
-		final Button btnStopRef = btnStop;
-
-		mediaPlayer
-				.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-					public void onCompletion(MediaPlayer mp) {
-
-						stopCurrent(btnPlayRef, btnStopRef);
-						playNext(btnPlayRef, btnStopRef);
-
-					}
-				});
-
-		try {
-			mediaPlayer.setDataSource(chooseSong(r, path).toString());
-			mediaPlayer.prepare();
-			mediaPlayer.start();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		isPlaying = true;
-		//btnPlay.setText("Next");
-		btnPlay.setBackgroundResource(R.drawable.forward_black);
-		btnStop.setEnabled(true);
-		btnStop.setBackgroundResource(R.drawable.stop_black);
-
-	}
-
-	public void stopCurrent(Button btnPlay, Button btnStop) {
-
-		mediaPlayer.stop();
-		mediaPlayer.reset();
-
-		isPlaying = false;
-		//btnPlay.setText("Play");
-		btnPlay.setBackgroundResource(R.drawable.play_black);
-		btnStop.setEnabled(false);
-		btnStop.setBackgroundResource(R.drawable.stop_disabled);
-
 	}
 
 }
