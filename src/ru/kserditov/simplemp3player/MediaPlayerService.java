@@ -3,6 +3,8 @@ package ru.kserditov.simplemp3player;
 import java.io.File;
 import java.util.Random;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -36,16 +38,33 @@ public class MediaPlayerService extends Service {
 			mediaPlayer.setDataSource(chooseSong().toString());
 			mediaPlayer.prepare();
 			Log.d("intent", "media player starting");
-			mediaPlayer.start();
 			mediaPlayer
 					.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 						public void onCompletion(MediaPlayer mp) {
+							mp.stop();
+							mp.reset();
 							playNext();
 						}
 					});
+
+			mediaPlayer.start();
+
+			Intent intent = new Intent(this, MainActivity.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+					| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+			PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+			Notification notification = new Notification.Builder(
+					getApplicationContext()).setContentTitle("Simple mp3 Player")
+					.setContentText("Now Playing")
+					.setSmallIcon(R.drawable.ic_launcher).setContentIntent(pi)
+					.build();
+
+			startForeground(6558, notification);
+
 		} catch (Exception e) {
 			Log.e("ERROR", e.getStackTrace().toString());
 		}
+
 	}
 
 	private File chooseSong() {
