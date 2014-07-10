@@ -1,20 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sysLtGray"
-    tools:context="ru.kserditov.simplemp3player.MainActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:context="ru.kserditov.simplemp3player.MainActivity" >
 
         <Button
             android:id="@+id/btnPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="64dp"
-            android:layout_marginTop="128dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="120dp"
             android:background="@drawable/play_black"
             android:onClick="playNext" />
 
@@ -22,12 +20,12 @@
             android:id="@+id/btnStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/btnPlay"
-            android:layout_alignTop="@+id/btnPlay"
-            android:layout_marginLeft="128dp"
-            android:layout_marginTop="128dp"
+            android:layout_alignBaseline="@+id/btnPlay"
+            android:layout_alignBottom="@+id/btnPlay"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="120dp"
             android:background="@drawable/stop_disabled"
             android:enabled="false"
             android:onClick="stopCurrent" />
-
+    
 </RelativeLayout>
