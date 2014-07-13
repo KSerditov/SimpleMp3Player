@@ -78,6 +78,7 @@ public class MediaPlayerService extends Service {
 		Log.d("intent", "OnDestroy occured");
 		super.onDestroy();
 		mediaPlayer.release();
+		stopForeground(true);
 	}
 
 	@Override
