@@ -30,4 +30,15 @@
             android:enabled="false"
             android:onClick="stopCurrent" />
 
+        <Button
+            android:id="@+id/btnSelectFolder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="19dp"
+            android:layout_marginLeft="22dp"
+            android:background="@drawable/folder_chooser"
+            android:onClick="selectFolder" />
+
 </RelativeLayout>

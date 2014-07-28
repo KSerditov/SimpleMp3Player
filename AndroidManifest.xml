@@ -4,6 +4,8 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-sdk
         android:minSdkVersion="16"
         android:targetSdkVersion="18" />
@@ -18,12 +20,23 @@
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-                <service
-            android:enabled="true"
-            android:name=".MediaPlayerService"      />
+
+        <service
+            android:name="ru.kserditov.simplemp3player.MediaPlayerService"
+            android:enabled="true" />
+
+        <activity
+            android:name="ru.kserditov.simplemp3player.FolderChooser"
+            android:label="@string/title_activity_folder_chooser"
+            android:parentActivityName="ru.kserditov.simplemp3player.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="MainActivity" />
+        </activity>
     </application>
 
 </manifest>
