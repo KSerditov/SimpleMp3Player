@@ -30,12 +30,14 @@ public class FolderChooser extends Activity {
 	SharedPreferences settings = null;
 	SharedPreferences.Editor editor = null;
 
+	// Comparator for sorting File objects
 	Comparator<File> fileComparator = new Comparator<File>() {
 		public int compare(File f1, File f2) {
 
 			String s1 = f1.getName();
 			String s2 = f2.getName();
 
+			// Make sure Up is always on top of the list
 			if (s1 == "..") {
 				return -1;
 			}
@@ -48,6 +50,7 @@ public class FolderChooser extends Activity {
 		}
 	};
 
+	// Filtering folders accessible for user
 	FilenameFilter directoryFilter = new FilenameFilter() {
 		@Override
 		public boolean accept(File dir, String filename) {
@@ -59,14 +62,20 @@ public class FolderChooser extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
+		// Initialize activity UI elements
 		setContentView(R.layout.activity_folder_chooser);
 		listView = (ListView) findViewById(R.id.lstFolders);
 		tvSelectedFolder = (TextView) findViewById(R.id.txtSelectedFolder);
+
+		// Read previously selected folder and try to open it
 		settings = getPreferences(MODE_PRIVATE);
-		
+
+		// Open root folder if there is not preserved setting yet
 		File currentFolder = new File(settings.getString("folder", "/"));
 
+		// Open root folder if previously selected folder doesn't exist anymore
+		// or is not accessible anymore
 		if (currentFolder.exists() && currentFolder.canRead()
 				&& !currentFolder.isHidden()) {
 			updateList(currentFolder);
@@ -75,16 +84,19 @@ public class FolderChooser extends Activity {
 		}
 	}
 
+	// Method is invoked on each CustomOnItemClickListener event in listView
 	private void updateList(File path) {
 
 		try {
 			fileList = new ArrayList<File>(Arrays.asList(path
 					.listFiles(directoryFilter)));
 
+			// Adding Up element to the list for every folder other than root
 			if (path.getParent() != null) {
 				fileList.add(parentDir);
 			}
 
+			// Sorting elements by names
 			Collections.sort(fileList, fileComparator);
 
 			ArrayAdapter<File> adapter = new ArrayAdapter<File>(this,
@@ -92,15 +104,19 @@ public class FolderChooser extends Activity {
 			listView.setAdapter(adapter);
 			listener = new CustomOnItemClickListener(path);
 			listView.setOnItemClickListener(listener);
+
+			// Updating UI with currently opened folder
 			tvSelectedFolder.setText(path.getPath());
 
 		} catch (NullPointerException e) {
+			// Showing popup message if can't go down to selected folder
 			toast = Toast.makeText(getApplicationContext(), getResources()
 					.getString(R.string.no_folder_access), Toast.LENGTH_SHORT);
 			toast.show();
 		}
 	}
 
+	// Preserving selected folder in SharedPreferences
 	public void confirmFolder(View view) {
 		editor = settings.edit();
 		editor.putString("folder", tvSelectedFolder.getText().toString());
@@ -108,6 +124,8 @@ public class FolderChooser extends Activity {
 		finish();
 	}
 
+	// Custom listener provides new File objects to move down or up from current
+	// folder
 	private class CustomOnItemClickListener implements OnItemClickListener {
 
 		File path = new File("/");
