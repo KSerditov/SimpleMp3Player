@@ -26,7 +26,7 @@ public class FolderChooser extends Activity {
 	File parentDir = new File("..");
 	Toast toast = null;
 	TextView tvSelectedFolder = null;
-	
+
 	Comparator<File> fileComparator = new Comparator<File>() {
 		public int compare(File f1, File f2) {
 
@@ -44,7 +44,7 @@ public class FolderChooser extends Activity {
 			return s1.compareTo(s2);
 		}
 	};
-	
+
 	FilenameFilter directoryFilter = new FilenameFilter() {
 		@Override
 		public boolean accept(File dir, String filename) {
@@ -52,7 +52,7 @@ public class FolderChooser extends Activity {
 			return f.isDirectory() && f.canRead() && !f.isHidden();
 		}
 	};
-	
+
 	CustomOnItemClickListener listener = null;
 
 	@Override
@@ -104,7 +104,7 @@ public class FolderChooser extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position,
 				long id) {
-			if (position == 0) {
+			if (parent.getAdapter().getItem(position).toString() == "..") {
 				updateList(new File(path.getParent()));
 			} else {
 				updateList((File) parent.getAdapter().getItem(position));
