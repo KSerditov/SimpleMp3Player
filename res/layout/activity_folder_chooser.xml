@@ -30,19 +30,20 @@
             android:layout_height="match_parent" >
 
             <Button
-                android:id="@+id/button1"
+                android:id="@+id/btnConfirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
-                android:text="@string/confirm_selection" />
+                android:text="@string/confirm_selection"
+                android:onClick="confirmFolder"/>
 
             <TextView
                 android:id="@+id/txtSelectedFolder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/button1"
+                android:layout_above="@+id/btnConfirm"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"

@@ -71,6 +71,10 @@ public class MainActivity extends ActionBarActivity {
 	}
 
 	public void selectFolder(View view) {
+		startFolderChooser();
+	}
+
+	private void startFolderChooser() {
 		Intent myIntent = new Intent(MainActivity.this, FolderChooser.class);
 		MainActivity.this.startActivity(myIntent);
 	}
@@ -87,11 +91,24 @@ public class MainActivity extends ActionBarActivity {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
+		switch (item.getItemId()) {
+
+		case R.id.select_folder:
+
+			startFolderChooser();
+
 			return true;
+
+		case R.id.quit:
+			if (isPlaying) {
+				stopService(intent);
+			}
+			finish();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
 		}
-		return super.onOptionsItemSelected(item);
 	}
 
 }

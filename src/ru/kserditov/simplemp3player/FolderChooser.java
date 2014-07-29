@@ -9,8 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,6 +26,9 @@ public class FolderChooser extends Activity {
 	File parentDir = new File("..");
 	Toast toast = null;
 	TextView tvSelectedFolder = null;
+	CustomOnItemClickListener listener = null;
+	SharedPreferences settings = null;
+	SharedPreferences.Editor editor = null;
 
 	Comparator<File> fileComparator = new Comparator<File>() {
 		public int compare(File f1, File f2) {
@@ -41,7 +44,7 @@ public class FolderChooser extends Activity {
 				return 1;
 			}
 
-			return s1.compareTo(s2);
+			return s1.compareToIgnoreCase(s2);
 		}
 	};
 
@@ -53,20 +56,26 @@ public class FolderChooser extends Activity {
 		}
 	};
 
-	CustomOnItemClickListener listener = null;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
 		setContentView(R.layout.activity_folder_chooser);
 		listView = (ListView) findViewById(R.id.lstFolders);
 		tvSelectedFolder = (TextView) findViewById(R.id.txtSelectedFolder);
-		updateList(new File("/"));
+		settings = getPreferences(MODE_PRIVATE);
+		
+		File currentFolder = new File(settings.getString("folder", "/"));
+
+		if (currentFolder.exists() && currentFolder.canRead()
+				&& !currentFolder.isHidden()) {
+			updateList(currentFolder);
+		} else {
+			updateList(new File("/"));
+		}
 	}
 
 	private void updateList(File path) {
-
-		Log.d("updateList parameter", path.getAbsolutePath().toString());
 
 		try {
 			fileList = new ArrayList<File>(Arrays.asList(path
@@ -90,6 +99,13 @@ public class FolderChooser extends Activity {
 					.getString(R.string.no_folder_access), Toast.LENGTH_SHORT);
 			toast.show();
 		}
+	}
+
+	public void confirmFolder(View view) {
+		editor = settings.edit();
+		editor.putString("folder", tvSelectedFolder.getText().toString());
+		editor.commit();
+		finish();
 	}
 
 	private class CustomOnItemClickListener implements OnItemClickListener {
