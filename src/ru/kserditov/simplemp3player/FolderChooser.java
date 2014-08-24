@@ -135,9 +135,9 @@ public class FolderChooser extends Activity {
 
 		File mPath = new File("/");
 
-		CustomOnItemClickListener(File _path) {
+		CustomOnItemClickListener(File path) {
 			super();
-			mPath = _path;
+			this.mPath = path;
 		}
 
 		@Override
